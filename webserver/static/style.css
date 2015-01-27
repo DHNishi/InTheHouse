@@ -1,0 +1,27 @@
+.nav {
+	padding-top: 10px;
+	background-color: #35CE8D;
+}
+/*light blue: #2DE1FC*/
+
+.nav a {
+	font-weight: bold;
+	text-decoration: underline;
+	color: black;
+	padding: 14px 10px;
+	text-transform: uppercase;
+}
+
+.nav li {
+	display: inline;
+	border: 10px;
+	border-color: red;
+}
+
+.jumbotron {
+	height: 500px;
+	margin-top: 25px;
+	/*background: url(/static/index_jumbotron.jpg);*/
+	background-position: left center;
+	background-repeat: no-repeat;
+}
