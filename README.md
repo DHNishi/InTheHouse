@@ -6,8 +6,6 @@ This app is intended to be used by people who have roommates or live with family
 
 # Low Fidelity Prototype
 
-[This will be a link to the low-fidelity prototype.](http://google.com)
-
 ![Low Fidelity Prototype](Prototype_1.jpg)
 
 # REST API
