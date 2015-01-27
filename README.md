@@ -8,6 +8,8 @@ This app is intended to be used by people who have roommates or live with family
 
 [This will be a link to the low-fidelity prototype.](http://google.com)
 
+![Low Fidelity Prototype](Prototype_1.jpg)
+
 # REST API
 
 We are going to build out a RESTful API using Python and Flask. It will use Mongo DB to store information about user's previous location check-ins and will utilize a third-party SSO service to authenticate users. This will be hosted in Amazon EC2 for use with the app.
