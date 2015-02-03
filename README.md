@@ -11,3 +11,12 @@ This app is intended to be used by people who have roommates or live with family
 # REST API
 
 We are going to build out a RESTful API using Python and Flask. It will use Mongo DB to store information about user's previous location check-ins and will utilize a third-party SSO service to authenticate users. This will be hosted in Amazon EC2 for use with the app.
+
+The resources we will use is that the API will need to facilitate:
+
+1. Checking in as being home.
+2. Sending a friend request.
+3. Accepting a friend request.
+4. Deleting a friend.
+5. Pulling the Home Status of accepted friends.
+6. Registering a home wifi.
