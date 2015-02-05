@@ -27,7 +27,8 @@ def test(uname):
 def friends(uname):
 	return str(database.getUser(uname)["friends"])
 
-with open (args.secret, "r") as secretFile:
-    app.secret_key = secretFile.read()
-app.debug = args.debug
-app.run(host=args.hostname)
+if __name__ == "__main__":
+	with open (args.secret, "r") as secretFile:
+    		app.secret_key = secretFile.read()
+	app.debug = args.debug
+	app.run(host=args.hostname)
