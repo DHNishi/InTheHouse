@@ -13,11 +13,19 @@ parser.add_argument('--debug', dest='debug', action='store_true', default=False,
 args = parser.parse_args()
 
 app = Flask(__name__)
-#database = db.DbInstance(args.database, args.username, args.password, 5)
+database = db.DbInstance(args.database, args.username, args.password, 5)
 
 @app.route('/')
 def index():
 	return render_template('index.html', number=5)
+
+@app.route('/user/<uname>/')
+def test(uname):
+	return str(database.getUser(uname))
+
+@app.route('/friends/<uname>/')
+def friends(uname):
+	return str(database.getUser(uname)["friends"])
 
 with open (args.secret, "r") as secretFile:
     app.secret_key = secretFile.read()
