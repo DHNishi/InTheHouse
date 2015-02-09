@@ -1,4 +1,5 @@
 from flask import Flask, url_for, request, session, redirect, render_template, flash
+from googleInterface import ApiInterface
 import db
 import argparse
 
@@ -19,13 +20,20 @@ database = db.DbInstance(args.database, args.username, args.password, 5)
 def index():
 	return render_template('index.html', number=5)
 
-@app.route('/user/<uname>/')
-def test(uname):
-	return str(database.getUser(uname))
+@app.route('/checkin/<token>/')
+def checkin(token):
+	api = ApiInterface(token)
+	id = api.getId()
+	email = api.getEmail()
+	database.checkin(id, email)
+	return id
+	
 
-@app.route('/friends/<uname>/')
-def friends(uname):
-	return str(database.getUser(uname)["friends"])
+if args.debug:
+	@app.route('/token/<token>/')
+	def useToken(token):
+		return str(ApiInterface(token).getJSON())
+	
 
 if __name__ == "__main__":
 	with open (args.secret, "r") as secretFile:
