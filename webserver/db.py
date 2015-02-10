@@ -15,7 +15,7 @@ class DbInstance(object):
 			print "Auth error."
 			raise Exception("Auth exception")
 
-	def __init__(self, host, uname, paswd, waitTime):
+	def __init__(self, host, uname, paswd):
 		self.connect(host, uname, paswd)
 
 	def checkin(self, id, email):

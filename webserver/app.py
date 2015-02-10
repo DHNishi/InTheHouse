@@ -14,11 +14,11 @@ parser.add_argument('--debug', dest='debug', action='store_true', default=False,
 args = parser.parse_args()
 
 app = Flask(__name__)
-database = db.DbInstance(args.database, args.username, args.password, 5)
+database = db.DbInstance(args.database, args.username, args.password)
 
 @app.route('/')
 def index():
-	return render_template('index.html', number=5)
+	return render_template('index.html')
 
 @app.route('/checkin/<token>/')
 def checkin(token):
