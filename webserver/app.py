@@ -22,11 +22,14 @@ def index():
 
 @app.route('/checkin/<token>/')
 def checkin(token):
-	api = ApiInterface(token)
-	id = api.getId()
-	email = api.getEmail()
-	database.checkin(id, email)
-	return id
+	try:
+		api = ApiInterface(token)
+		id = api.getId()
+		email = api.getEmail()
+		database.checkin(id, email)
+		return id
+	except:
+		return "401.  Bad auth.", 401
 	
 
 if args.debug:
