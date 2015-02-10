@@ -16,5 +16,8 @@ class ApiInterface(object):
 	def getId(self):
 		return self.JSON['id']
 
+	def getName(self):
+		return self.JSON['name']
+
 	def getJSON(self):
 		return self.JSON

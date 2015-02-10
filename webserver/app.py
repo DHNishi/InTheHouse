@@ -26,7 +26,8 @@ def checkin(token):
 		api = ApiInterface(token)
 		id = api.getId()
 		email = api.getEmail()
-		database.checkin(id, email)
+		name = api.getName()
+		database.checkin(id, email, name)
 		return id
 	except:
 		return "401.  Bad auth.", 401
