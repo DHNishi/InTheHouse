@@ -3,6 +3,7 @@ from googleInterface import ApiInterface
 import db
 from db import FriendNotFoundException, AuthException
 import argparse
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-H', '--hostname', dest='hostname', required=True, help='Host name, IP Address')
@@ -33,7 +34,7 @@ def checkin(token):
 	except:
 		return "401.  Bad auth.", 401
 
-@app.route('/friends/request/<token>/<friendEmail>/')
+@app.route('/friends/add/<token>/<friendEmail>/')
 def friendRequest(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
@@ -44,14 +45,23 @@ def friendRequest(token, friendEmail):
 	except AuthException:
 		return "401.  Bad auth.", 401
 	except TypeError:
-		return "400.  Bad hex encoding.", 400
-	
+		return "400.  Bad hex encoding.", 400	
+
+@app.route('/friends/status/<token>/')
+def friendStatus(token):
+	try:
+		id = ApiInterface(token).getId()
+		friends = database.getFriends(id)
+		return json.dumps(friends)
+	except FriendNotFoundException:
+		return "404.  Email not found.", 404
+	except AuthException:
+		return "401.  Bad auth.", 401
 
 if args.debug:
 	@app.route('/token/<token>/')
 	def useToken(token):
 		return str(ApiInterface(token).getJSON())
-	
 
 if __name__ == "__main__":
 	with open (args.secret, "r") as secretFile:

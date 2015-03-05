@@ -28,12 +28,21 @@ class DbInstance(object):
 		else:
 			self.users.update( {'id':id}, {'$set': {'checkin':now} } )
 
+	def getFriends(self, id):
+		user = self.users.find_one( {'id':id} )
+		result = []
+		for friend in user['friends']:
+			friend = self.findUserById(friend)
+			del friend['_id']
+			del friend['friends']
+			result.append(friend)
+		return result
+
 	def findUserById(self, id):
 		return self.users.find_one( {"id":id} )
 
 	def findUserByEmail(self, email):
 		return self.users.find_one( {"email":email} )
-
 
 	def requestFriend(self, id, friendEmail):
 		friend = self.findUserByEmail(friendEmail)
