@@ -5,12 +5,14 @@ class DbInstance(object):
 	client = None
 	db = None
 	users = None
+	friendRequests = None
 
 	def connect(self, host, uname, paswd):
 		super(DbInstance, self).__init__()
 		self.client = pymongo.MongoClient(host)
 		self.db = self.client["inthehouse"]
 		self.users = self.db["users"]
+		self.friendRequests = self.db["friendRequests"]
 		if not self.db.authenticate(uname, paswd):
 			print "Auth error."
 			raise Exception("Auth exception")
@@ -25,3 +27,24 @@ class DbInstance(object):
 			self.users.insert( {'id':id, 'email': email, 'name': name, 'checkin': now, 'friends':[]} )
 		else:
 			self.users.update( {'id':id}, {'$set': {'checkin':now} } )
+
+	def findUserById(self, id):
+		return self.users.find_one( {"id":id} )
+
+	def findUserByEmail(self, email):
+		return self.users.find_one( {"email":email} )
+
+
+	def requestFriend(self, id, friendEmail):
+		friend = self.findUserByEmail(friendEmail)
+		if (friend == None):
+			raise FriendNotFoundException
+		self.friendRequests.insert( {"from": id, "to": friend["id"]} )
+
+class FriendNotFoundException(Exception):
+	def __init__(self):
+		pass
+
+class AuthException(Exception):
+	def __init__(self):
+		pass

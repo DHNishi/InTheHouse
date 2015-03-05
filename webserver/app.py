@@ -1,6 +1,7 @@
 from flask import Flask, url_for, request, session, redirect, render_template, flash
 from googleInterface import ApiInterface
 import db
+from db import FriendNotFoundException, AuthException
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -31,6 +32,19 @@ def checkin(token):
 		return id
 	except:
 		return "401.  Bad auth.", 401
+
+@app.route('/friends/request/<token>/<friendEmail>/')
+def friendRequest(token, friendEmail):
+	try:
+		id = ApiInterface(token).getId()
+		friendEmail = friendEmail.decode("hex")
+		database.requestFriend(id, friendEmail)
+	except FriendNotFoundException:
+		return "404.  Email not found.", 404
+	except AuthException:
+		return "401.  Bad auth.", 401
+	except TypeError:
+		return "400.  Bad hex encoding.", 400
 	
 
 if args.debug:
