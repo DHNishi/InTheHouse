@@ -31,10 +31,12 @@ class DbInstance(object):
 	def getFriends(self, id):
 		user = self.users.find_one( {'id':id} )
 		result = []
+		now = int(time.time())
 		for friend in user['friends']:
 			friend = self.findUserById(friend)
 			del friend['_id']
 			del friend['friends']
+			friend['checkin'] = str(now - int(friend['checkin']))
 			result.append(friend)
 		return result
 
