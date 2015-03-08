@@ -23,10 +23,7 @@ class DbInstance(object):
 	def checkin(self, id, email, name):
 		now = str(int(time.time()))
 		result = self.users.find_one( {'id': id} )
-		if result == None:
-			self.users.insert( {'id':id, 'email': email, 'name': name, 'checkin': now, 'friends':[]} )
-		else:
-			self.users.update( {'id':id}, {'$set': {'checkin':now} } )
+		self.users.update( {'id':id}, {'$set': {'id':id, 'email': email, 'name': name, 'checkin': now} }, True )
 
 	def getFriends(self, id):
 		user = self.users.find_one( {'id':id} )
