@@ -33,7 +33,8 @@ class DbInstance(object):
 			for friend in user['friends']:
 				friend = self.findUserById(friend)
 				del friend['_id']
-				del friend['friends']
+				if 'friends' in friend:
+					del friend['friends']
 				friend['checkin'] = str(now - int(friend['checkin']))
 				result.append(friend)
 		return result
