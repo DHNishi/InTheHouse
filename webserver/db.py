@@ -25,18 +25,23 @@ class DbInstance(object):
 	def checkin(self, id, email, name):
 		now = str(int(time.time()))
 		result = self.users.find_one( {'id': id} )
-		if result == None:
-			self.users.insert( {'id':id, 'email': email, 'name': name, 'checkin': now} )
-		else:
-			self.users.update( {'id':id}, {'$set': {'checkin':now} } )
+
+		self.users.update( {'id':id}, {'$set': {'id':id, 'email': email, 'name': name, 'checkin': now} }, True )
 
 	def getFriends(self, id):
 		user = self.users.find_one( {'id':id} )
 		friends = self.allFriends.find( {'friend1' : id} )
 		result = []
-		for friend in friends:
-			friend = self.findUserById(friend)
-			result.append(friend)
+
+		now = int(time.time())
+		if 'friends' in user:
+			for friend in user['friends']:
+				friend = self.findUserById(friend)
+				del friend['_id']
+				if 'friends' in friend:
+					del friend['friends']
+				friend['checkin'] = str(now - int(friend['checkin']))
+				result.append(friend)
 		return result
 
 	def findUserById(self, id):
