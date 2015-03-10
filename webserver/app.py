@@ -47,14 +47,60 @@ def friendRequest(token, friendEmail):
 	except TypeError:
 		return "400.  Bad hex encoding.", 400	
 
+@app.route('/friends/accept/<token>/<friendEmail>/')
+def acceptRequest(token, friendEmail):
+	try:
+		id = ApiInterface(token).getId()
+		friendEmail = friendEmail.decode("hex")
+		database.acceptFriend(id, friendEmail)
+	except FriendNotFoundException:
+		return "404.  Email not found.", 404
+	except AuthException:
+		return "401.  Bad auth.", 401
+	except TypeError:
+		return "400.  Bad hex encoding.", 400	
+
+@app.route('/friends/reject/<token>/<friendEmail>/')
+def rejectRequest(token, friendEmail):
+	try:
+		id = ApiInterface(token).getId()
+		friendEmail = friendEmail.decode("hex")
+		database.rejectFriend(id, friendEmail)
+	except FriendNotFoundException:
+		return "404.  Email not found.", 404
+	except AuthException:
+		return "401.  Bad auth.", 401
+	except TypeError:
+		return "400.  Bad hex encoding.", 400	
+
+@app.route('/friends/delete/<token>/<friendEmail>/')
+def deleteFriend(token, friendEmail):
+	try:
+		id = ApiInterface(token).getId()
+		friendEmail = friendEmail.decode("hex")
+		database.deleteFriend(id, friendEmail)
+	except FriendNotFoundException:
+		return "404.  Email not found.", 404
+	except AuthException:
+		return "401.  Bad auth.", 401
+	except TypeError:
+		return "400.  Bad hex encoding.", 400	
+
 @app.route('/friends/status/<token>/')
 def friendStatus(token):
 	try:
 		id = ApiInterface(token).getId()
 		friends = database.getFriends(id)
 		return json.dumps(friends)
-	except FriendNotFoundException:
-		return "404.  Email not found.", 404
+	except AuthException:
+		return "401.  Bad auth.", 401
+
+@app.route('/friends/requests/<token>/')
+def pendingRequests(token):
+	try:
+		id = ApiInterface(token).getId()
+		requests = database.getRequests(id)
+		return json.dumps(requests)
 	except AuthException:
 		return "401.  Bad auth.", 401
 
