@@ -53,7 +53,12 @@ class DbInstance(object):
 		friend = self.findUserByEmail(friendEmail)
 		if (friend == None):
 			raise FriendNotFoundException
-		self.friendRequests.insert( {"from": id, "to": friend["id"]} )
+
+		#if not already friends
+		if self.allFriends.find_one( {'friend1' : id, 'friend2' : friend['id']} ) == None:
+			#if friend request doesn't already exist
+			if self.friendRequests.find_one( {"from": id, "to": friend["id"]} ) == None:
+				self.friendRequests.insert( {"from": id, "to": friend["id"]} )
 
 	def getRequests(self, id):
 		requests = self.friendRequests.find( {"to": id} )
@@ -68,9 +73,11 @@ class DbInstance(object):
 		if (friend == None):
 			raise FriendNotFoundException
 
+		#add friendship
 		self.allFriends.insert( {"friend1" : id, "friend2" : friend["id"]} )
 		self.allFriends.insert( {"friend2" : id, "friend1" : friend["id"]} )
 
+		#remove friend requests
 		if self.friendRequests.find_one( {"from": id, "to": friend["id"]} ) != None:
 			self.friendRequests.remove( {"from": id, "to": friend["id"]} )
 		if self.friendRequests.find_one( {"to": id, "from": friend["id"]} ) != None:
@@ -89,6 +96,7 @@ class DbInstance(object):
 		if (friend == None):
 			raise FriendNotFoundException
 
+		#remove friend requests
 		if self.friendRequests.find_one( {"from": id, "to": friend["id"]} ) != None:
 			self.friendRequests.remove( {"from": id, "to": friend["id"]} )
 		if self.friendRequests.find_one( {"to": id, "from": friend["id"]} ) != None:
@@ -99,9 +107,9 @@ class DbInstance(object):
 		if (friend == None):
 			raise FriendNotFoundException
 
+		#remove friendship
 		self.allFriends.remove( {"friend1" : id, "friend2" : friend["id"]} )
 		self.allFriends.remove( {"friend2" : id, "friend1" : friend["id"]} )
-
 
 
 class FriendNotFoundException(Exception):
