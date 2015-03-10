@@ -38,7 +38,6 @@ def checkin(token):
 def friendRequest(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
-		friendEmail = friendEmail.decode("hex")
 		database.requestFriend(id, friendEmail)
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
@@ -51,7 +50,6 @@ def friendRequest(token, friendEmail):
 def acceptRequest(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
-		friendEmail = friendEmail.decode("hex")
 		database.acceptFriend(id, friendEmail)
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
@@ -64,7 +62,6 @@ def acceptRequest(token, friendEmail):
 def rejectRequest(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
-		friendEmail = friendEmail.decode("hex")
 		database.rejectFriend(id, friendEmail)
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
@@ -77,7 +74,6 @@ def rejectRequest(token, friendEmail):
 def deleteFriend(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
-		friendEmail = friendEmail.decode("hex")
 		database.deleteFriend(id, friendEmail)
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
@@ -108,6 +104,18 @@ if args.debug:
 	@app.route('/token/<token>/')
 	def useToken(token):
 		return str(ApiInterface(token).getJSON())
+
+	@app.route('/friends/forceadd/<myEmail>/<friendEmail>/')
+	def forceAddFriend(myEmail, friendEmail):
+		try:
+			database.forceAcceptFriend(myEmail, friendEmail)
+			return "Done.  Now turn this off." 
+		except FriendNotFoundException:
+			return "404.  Email not found.", 404
+		except AuthException:
+			return "401.  Bad auth.", 401
+		except TypeError:
+			return "400.  Bad hex encoding.", 400
 
 if __name__ == "__main__":
 	with open (args.secret, "r") as secretFile:

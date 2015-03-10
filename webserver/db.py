@@ -34,14 +34,13 @@ class DbInstance(object):
 		result = []
 
 		now = int(time.time())
-		if 'friends' in user:
-			for friend in user['friends']:
-				friend = self.findUserById(friend)
-				del friend['_id']
-				if 'friends' in friend:
-					del friend['friends']
-				friend['checkin'] = str(now - int(friend['checkin']))
-				result.append(friend)
+		for pair in self.allFriends.find( {'friend1':user['id']} ):
+			friend = self.findUserById(pair['friend2'])
+			del friend['_id']
+			if 'friends' in friend:
+				del friend['friends']
+			friend['checkin'] = str(now - int(friend['checkin']))
+			result.append(friend)
 		return result
 
 	def findUserById(self, id):
@@ -76,6 +75,14 @@ class DbInstance(object):
 			self.friendRequests.remove( {"from": id, "to": friend["id"]} )
 		if self.friendRequests.find_one( {"to": id, "from": friend["id"]} ) != None:
 			self.friendRequests.remove( {"to": id, "from": friend["id"]} )
+
+	#Only for use in debugging/testing.
+	def forceAcceptFriend(self, myEmail, friendEmail):
+		me = self.findUserByEmail(myEmail)
+		if me:
+			id = me['id']
+			print "***" + id
+			self.acceptFriend(id, friendEmail)
 
 	def rejectFriend(self, id, friendEmail):
 		friend = self.findUserByEmail(friendEmail)
