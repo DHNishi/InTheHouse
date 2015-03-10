@@ -68,20 +68,19 @@ class DbInstance(object):
 			result.append(friend)
 		return result
 
-	def acceptFriend(self, id, friendEmail):
-		friend = self.findUserByEmail(friendEmail)
-		if (friend == None):
+	def acceptFriend(self, id, friendId):
+		if self.findUserById(friendId) == None:
 			raise FriendNotFoundException
 
 		#add friendship
-		self.allFriends.insert( {"friend1" : id, "friend2" : friend["id"]} )
-		self.allFriends.insert( {"friend2" : id, "friend1" : friend["id"]} )
+		self.allFriends.insert( {"friend1" : id, "friend2" : friendId} )
+		self.allFriends.insert( {"friend2" : id, "friend1" : friendId} )
 
 		#remove friend requests
-		if self.friendRequests.find_one( {"from": id, "to": friend["id"]} ) != None:
-			self.friendRequests.remove( {"from": id, "to": friend["id"]} )
-		if self.friendRequests.find_one( {"to": id, "from": friend["id"]} ) != None:
-			self.friendRequests.remove( {"to": id, "from": friend["id"]} )
+		if self.friendRequests.find_one( {"from": id, "to": friendId} ) != None:
+			self.friendRequests.remove( {"from": id, "to": friendId} )
+		if self.friendRequests.find_one( {"to": id, "from": friendId} ) != None:
+			self.friendRequests.remove( {"to": id, "from": friendId} )
 
 	#Only for use in debugging/testing.
 	def forceAcceptFriend(self, myEmail, friendEmail):
@@ -91,25 +90,23 @@ class DbInstance(object):
 			print "***" + id
 			self.acceptFriend(id, friendEmail)
 
-	def rejectFriend(self, id, friendEmail):
-		friend = self.findUserByEmail(friendEmail)
-		if (friend == None):
+	def rejectFriend(self, id, friendId):
+		if self.findUserById(friendId) == None:
 			raise FriendNotFoundException
 
 		#remove friend requests
-		if self.friendRequests.find_one( {"from": id, "to": friend["id"]} ) != None:
-			self.friendRequests.remove( {"from": id, "to": friend["id"]} )
-		if self.friendRequests.find_one( {"to": id, "from": friend["id"]} ) != None:
-			self.friendRequests.remove( {"to": id, "from": friend["id"]} )
+		if self.friendRequests.find_one( {"from": id, "to": friendId} ) != None:
+			self.friendRequests.remove( {"from": id, "to": friendId} )
+		if self.friendRequests.find_one( {"to": id, "from": friendId} ) != None:
+			self.friendRequests.remove( {"to": id, "from": friendId} )
 
-	def deleteFriend(self, id, friendEmail):
-		friend = self.findUserByEmail(friendEmail)
-		if (friend == None):
+	def deleteFriend(self, id, friendId):
+		if self.findUserById(friendId) == None:
 			raise FriendNotFoundException
 
 		#remove friendship
-		self.allFriends.remove( {"friend1" : id, "friend2" : friend["id"]} )
-		self.allFriends.remove( {"friend2" : id, "friend1" : friend["id"]} )
+		self.allFriends.remove( {"friend1" : id, "friend2" : friendId} )
+		self.allFriends.remove( {"friend2" : id, "friend1" : friendId} )
 
 
 class FriendNotFoundException(Exception):
