@@ -39,6 +39,7 @@ def friendRequest(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
 		database.requestFriend(id, friendEmail)
+		return "Success", 200
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
 	except AuthException:
@@ -51,6 +52,7 @@ def acceptRequest(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
 		database.acceptFriend(id, friendEmail)
+		return "Success", 200
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
 	except AuthException:
@@ -63,6 +65,7 @@ def rejectRequest(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
 		database.rejectFriend(id, friendEmail)
+		return "Success", 200
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
 	except AuthException:
@@ -75,6 +78,7 @@ def deleteFriend(token, friendEmail):
 	try:
 		id = ApiInterface(token).getId()
 		database.deleteFriend(id, friendEmail)
+		return "Success", 200
 	except FriendNotFoundException:
 		return "404.  Email not found.", 404
 	except AuthException:
