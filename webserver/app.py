@@ -1,7 +1,8 @@
 from flask import Flask, url_for, request, session, redirect, render_template, flash
 from googleInterface import ApiInterface
 import db
-from db import FriendNotFoundException, AuthException
+from db import FriendNotFoundException
+from googleInterface import AuthException
 import argparse
 import json
 
@@ -31,7 +32,7 @@ def checkin(token):
 		name = api.getName()
 		database.checkin(id, email, name)
 		return id
-	except:
+	except AuthException:
 		return "401.  Bad auth.", 401
 
 @app.route('/friends/add/<token>/<friendEmail>/')
@@ -44,8 +45,6 @@ def friendRequest(token, friendEmail):
 		return "404.  Email not found.", 404
 	except AuthException:
 		return "401.  Bad auth.", 401
-	except TypeError:
-		return "400.  Bad hex encoding.", 400	
 
 @app.route('/friends/accept/<token>/<friendId>/')
 def acceptRequest(token, friendId):
@@ -57,8 +56,6 @@ def acceptRequest(token, friendId):
 		return "404.  Email not found.", 404
 	except AuthException:
 		return "401.  Bad auth.", 401
-	except TypeError:
-		return "400.  Bad hex encoding.", 400	
 
 @app.route('/friends/reject/<token>/<friendId>/')
 def rejectRequest(token, friendId):
@@ -70,8 +67,6 @@ def rejectRequest(token, friendId):
 		return "404.  Email not found.", 404
 	except AuthException:
 		return "401.  Bad auth.", 401
-	except TypeError:
-		return "400.  Bad hex encoding.", 400	
 
 @app.route('/friends/delete/<token>/<friendId>/')
 def deleteFriend(token, friendId):
@@ -83,8 +78,6 @@ def deleteFriend(token, friendId):
 		return "404.  Email not found.", 404
 	except AuthException:
 		return "401.  Bad auth.", 401
-	except TypeError:
-		return "400.  Bad hex encoding.", 400	
 
 @app.route('/friends/status/<token>/')
 def friendStatus(token):
@@ -118,8 +111,6 @@ if args.debug:
 			return "404.  Email not found.", 404
 		except AuthException:
 			return "401.  Bad auth.", 401
-		except TypeError:
-			return "400.  Bad hex encoding.", 400
 
 if __name__ == "__main__":
 	with open (args.secret, "r") as secretFile:

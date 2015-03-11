@@ -113,7 +113,3 @@ class DbInstance(object):
 class FriendNotFoundException(Exception):
 	def __init__(self):
 		pass
-
-class AuthException(Exception):
-	def __init__(self):
-		pass
