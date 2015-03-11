@@ -65,6 +65,7 @@ class DbInstance(object):
 		result = []
 		for request in requests:
 			friend = self.findUserById(request['from'])
+			del friend['_id']
 			result.append(friend)
 		return result
 
