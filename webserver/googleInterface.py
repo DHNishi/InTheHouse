@@ -10,7 +10,7 @@ class ApiInterface(object):
 		self.token = token
 		self.JSON = requests.get(URL, headers={'Authorization': 'Bearer ' + self.token}).json()
 		if 'error' in self.JSON:
-			raise AuthException()
+			raise AuthException(self.JSON)
 
 	def getEmail(self):
 		return self.JSON['email']
@@ -25,5 +25,5 @@ class ApiInterface(object):
 		return self.JSON
 
 class AuthException(Exception):
-	def __init__(self):
-		pass
+	def __init__(self, json):
+		self.json = json

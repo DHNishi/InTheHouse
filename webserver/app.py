@@ -100,8 +100,11 @@ def pendingRequests(token):
 if args.debug:
 	@app.route('/token/<token>/')
 	def useToken(token):
-		return str(ApiInterface(token).getJSON())
-
+		try:
+			return str(ApiInterface(token).getJSON())
+		except AuthException as e:
+			return str(e.json)
+			
 	@app.route('/friends/forceadd/<myEmail>/<friendEmail>/')
 	def forceAddFriend(myEmail, friendEmail):
 		try:
