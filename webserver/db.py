@@ -59,6 +59,8 @@ class DbInstance(object):
 			#if friend request doesn't already exist
 			if self.friendRequests.find_one( {"from": id, "to": friend["id"]} ) == None:
 				self.friendRequests.insert( {"from": id, "to": friend["id"]} )
+		else:
+			raise FriendNotFoundException
 
 	def getRequests(self, id):
 		requests = self.friendRequests.find( {"to": id} )
