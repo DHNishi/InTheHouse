@@ -26,7 +26,7 @@ class DbInstance(object):
 		now = str(int(time.time()))
 		result = self.users.find_one( {'id': id} )
 
-		self.users.update( {'id':id}, {'$set': {'id':id, 'email': email, 'name': name, 'checkin': now} }, True )
+		self.users.update( {'id':id}, {'$set': {'id':id, 'email': email.lower(), 'name': name, 'checkin': now} }, True )
 
 	def getFriends(self, id):
 		user = self.users.find_one( {'id':id} )
