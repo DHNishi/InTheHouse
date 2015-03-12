@@ -51,7 +51,7 @@ class DbInstance(object):
 
 	def requestFriend(self, id, friendEmail):
 		friend = self.findUserByEmail(friendEmail)
-		if (friend == None || friend['id'] == id):
+		if (friend == None or friend['id'] == id):
 			raise FriendNotFoundException
 
 		#if not already friends
