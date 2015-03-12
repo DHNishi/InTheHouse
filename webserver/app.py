@@ -30,7 +30,8 @@ def checkin(token):
 		id = api.getId()
 		email = api.getEmail()
 		name = api.getName()
-		database.checkin(id, email, name)
+		picture = api.getPicture()
+		database.checkin(id, email, name, picture)
 		return id
 	except AuthException:
 		return "401.  Bad auth.", 401

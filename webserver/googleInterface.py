@@ -21,6 +21,9 @@ class ApiInterface(object):
 	def getName(self):
 		return self.JSON['name']
 
+	def getPicture(self):
+		return self.JSON['picture']
+
 	def getJSON(self):
 		return self.JSON
 

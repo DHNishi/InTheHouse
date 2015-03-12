@@ -22,11 +22,14 @@ class DbInstance(object):
 	def __init__(self, host, uname, paswd):
 		self.connect(host, uname, paswd)
 
-	def checkin(self, id, email, name):
+	def checkin(self, id, email, name, picture):
 		now = str(int(time.time()))
 		result = self.users.find_one( {'id': id} )
+		new = {'id':id, 'email': email, 'name': name, 'checkin': now}
+		if picture:
+			new['picture'] = picture
 
-		self.users.update( {'id':id}, {'$set': {'id':id, 'email': email, 'name': name, 'checkin': now} }, True )
+		self.users.update( {'id':id}, {'$set': new }, True )
 
 	def getFriends(self, id):
 		user = self.users.find_one( {'id':id} )
