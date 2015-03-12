@@ -22,14 +22,11 @@ class DbInstance(object):
 	def __init__(self, host, uname, paswd):
 		self.connect(host, uname, paswd)
 
-	def checkin(self, id, email, name, picture):
+	def checkin(self, id, email, name):
 		now = str(int(time.time()))
 		result = self.users.find_one( {'id': id} )
-		new = {'id':id, 'email': email, 'name': name, 'checkin': now}
-		if picture:
-			new['picture'] = picture
 
-		self.users.update( {'id':id}, {'$set': new }, True )
+		self.users.update( {'id':id}, {'$set': {'id':id, 'email': email, 'name': name, 'checkin': now} }, True )
 
 	def getFriends(self, id):
 		user = self.users.find_one( {'id':id} )
@@ -54,7 +51,7 @@ class DbInstance(object):
 
 	def requestFriend(self, id, friendEmail):
 		friend = self.findUserByEmail(friendEmail)
-		if (friend == None):
+		if (friend == None || friend['id'] == id):
 			raise FriendNotFoundException
 
 		#if not already friends
